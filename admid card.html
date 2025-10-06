@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admit Card - Model Test</title>
+<style>
+  @page { size: A4; margin: 20mm; }
+
+  body { font-family: Arial, sans-serif; background: #eef6ff; margin:0; padding:0; }
+
+  /* ====== Input Form Styling ====== */
+  .input-form {
+    max-width: 750px;
+    margin: 20px auto;
+    background: #f0f4f8;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-family: Arial, sans-serif;
+  }
+
+  .form-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+  }
+
+  .form-row label {
+    width: 150px;
+    font-weight: bold;
+    color: #003366;
+  }
+
+  .form-row input[type="text"],
+  .form-row input[type="file"] {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+
+  .form-row input[type="text"]:focus {
+    border-color: #0077b6;
+    outline: none;
+    box-shadow: 0 0 5px rgba(0,119,182,0.3);
+  }
+
+  .form-actions {
+    text-align: right;
+    margin-top: 15px;
+  }
+
+  .print-btn, .pdf-btn {
+    display: inline-block;
+    margin-left: 10px;
+    background: #0077b6;
+    color: white;
+    border: none;
+    padding: 10px 25px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  .print-btn:hover, .pdf-btn:hover { background: #005f86; }
+
+  /* ====== Admit Card Styling ====== */
+  .page {
+    width: 100%;
+    max-width: 210mm;
+    background: #fff;
+    margin: 20px auto;
+    padding: 25mm;
+    box-sizing: border-box;
+    border: 2px solid #0077b6;
+    border-radius: 10px;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 2px solid #0077b6;
+    padding-bottom: 10px;
+    margin-bottom: 25px;
+  }
+
+  .logo {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    border: 3px solid #a3d2f2;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+    font-family: Arial, sans-serif;
+    flex-shrink: 0;
+  }
+
+  .logo .lwi { font-size: 20px; font-weight: bold; color: #0077b6; }
+  .logo .text { font-size: 10px; font-weight: bold; color: #3399ff; margin-top:2px; }
+
+  .header-text {
+    flex:1;
+    text-align:center;
+  }
+
+  .header-text h1 { margin:0; font-size:24px; color:#003366; }
+  .header-text h2 { margin:5px 0; font-size:16px; color:#0077b6; }
+  .header-text p { margin:0; font-weight:bold; }
+
+  .info-section { display:flex; justify-content:space-between; align-items:flex-start; }
+
+  .student-info { width:70%; }
+
+  table { width:100%; border-collapse: collapse; }
+  td { padding:8px; font-size:16px; border-bottom:1px solid #ddd; }
+  td:first-child { font-weight:bold; color:#003366; width:40%; }
+
+  .photo-box {
+    width:120px; height:140px;
+    border:2px solid #003366;
+    display:flex; justify-content:center; align-items:center;
+    font-size:14px; color:#555; background:#f8f9fa;
+  }
+
+  .note {
+    margin-top:20px;
+    font-size:16px;
+    color:#d62828;
+    background:#fff0f0;
+    border-left:5px solid #d62828;
+    padding:10px 15px;
+    border-radius:6px;
+  }
+
+  .signature {
+    margin-top:40px;
+    display:flex;
+    justify-content:space-between;
+    font-weight:bold;
+    color:#003366;
+    text-align:center;
+  }
+
+  @media print {
+    body { background:none; }
+    .page { border:1px solid #000; box-shadow:none; }
+    .input-form { display:none; }
+    button { display:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Input Form -->
+<div class="input-form">
+  <div class="form-row">
+    <label>Student Name:</label>
+    <input type="text" id="name" placeholder="Enter Name">
+  </div>
+  <div class="form-row">
+    <label>Roll Number:</label>
+    <input type="text" id="roll" placeholder="Enter Roll Number">
+  </div>
+  <div class="form-row">
+    <label>Class:</label>
+    <input type="text" id="class" placeholder="Enter Class">
+  </div>
+  <div class="form-row">
+    <label>Exam Date:</label>
+    <input type="text" id="date" placeholder="DD/MM/YYYY">
+  </div>
+  <div class="form-row">
+    <label>Exam Center:</label>
+    <input type="text" id="place" placeholder="Enter Exam Center">
+  </div>
+  <div class="form-row">
+    <label>Group:</label>
+    <input type="text" id="group" placeholder="Enter Group">
+  </div>
+  <div class="form-row">
+    <label>Upload Photo (Optional):</label>
+    <input type="file" id="photo" accept="image/*">
+  </div>
+
+  <div class="form-actions">
+    <button class="print-btn" onclick="printCard()">Print Admit Card</button>
+    <button class="pdf-btn" onclick="downloadPDF()">Download PDF</button>
+  </div>
+</div>
+
+<!-- Admit Card -->
+<div class="page" id="admitCard" style="display:none;">
+
+  <!-- Header with 2 logos and center name -->
+  <div class="header">
+    <div class="logo">
+      <div class="lwi">LWI</div>
+      <div class="text">Learn with Irfat</div>
+    </div>
+
+    <div class="header-text">
+      <h1>Learn with Irfat Coaching Center</h1>
+      <h2>Model Test - 2025</h2>
+      <p><strong>Admit Card</strong></p>
+    </div>
+
+    <div class="logo">
+      <div class="lwi">LWI</div>
+      <div class="text">Learn with Irfat</div>
+    </div>
+  </div>
+
+  <div class="info-section">
+    <div class="student-info">
+      <table>
+        <tr><td>Student Name:</td><td id="cName"></td></tr>
+        <tr><td>Roll Number:</td><td id="cRoll"></td></tr>
+        <tr><td>Class:</td><td id="cClass"></td></tr>
+        <tr><td>Exam Date:</td><td id="cDate"></td></tr>
+        <tr><td>Exam Center:</td><td id="cPlace"></td></tr>
+        <tr><td>Group:</td><td id="cGroup"></td></tr>
+      </table>
+    </div>
+
+    <div class="photo-box" id="cPhoto">No Photo</div>
+  </div>
+
+  <div class="note">
+    ⚠️ Students must bring this admit card to the exam hall. Entry without admit card will not be allowed.
+  </div>
+
+  <div class="signature">
+    <div>_____________________<br>Student</div>
+    <div>_____________________<br>Exam Controller<br><strong>Irfat Hossen</strong></div>
+  </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+function generateAdmitCard() {
+  document.getElementById('cName').innerText = document.getElementById('name').value;
+  document.getElementById('cRoll').innerText = document.getElementById('roll').value;
+  document.getElementById('cClass').innerText = document.getElementById('class').value;
+  document.getElementById('cDate').innerText = document.getElementById('date').value;
+  document.getElementById('cPlace').innerText = document.getElementById('place').value;
+  document.getElementById('cGroup').innerText = document.getElementById('group').value;
+
+  const file = document.getElementById('photo').files[0];
+  const photoBox = document.getElementById('cPhoto');
+  if(file){
+    const reader = new FileReader();
+    reader.onload = function(e){
+      photoBox.innerHTML = '<img src="'+e.target.result+'" style="width:100%;height:100%;object-fit:cover;">';
+    }
+    reader.readAsDataURL(file);
+  } else { photoBox.innerHTML = 'No Photo'; }
+
+  document.getElementById('admitCard').style.display = 'block';
+}
+
+function printCard() {
+  generateAdmitCard();
+  window.print();
+}
+
+function downloadPDF() {
+  generateAdmitCard();
+  const { jsPDF } = window.jspdf;
+  const admitCard = document.getElementById('admitCard');
+  html2canvas(admitCard).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p','mm','a4');
+    const imgProps = pdf.getImageProperties(imgData);
+    const pdfWidth = pdf.internal.pageSize.getWidth();
+    const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;
+    pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+    pdf.save('Admit_Card.pdf');
+  });
+}
+
+// Auto-generate on input change (live preview)
+document.querySelectorAll('input').forEach(input=>{
+  input.addEventListener('input', generateAdmitCard);
+});
+</script>
+
+</body>
+</html>
